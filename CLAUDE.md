@@ -8,6 +8,15 @@ Runs every Monday at 6 AM Pacific. Generates a consolidated weekly review and co
 
 Pull all Open Brain thoughts captured during the target week (Monday–Sunday) using the Open Brain MCP tools (`mcp__open_brain__list_thoughts`, `mcp__open_brain__search`). Thoughts may be dated slightly after the week ends (e.g. a Monday capture of a Sunday event) — include any thought whose underlying event falls within the target window.
 
+### What to expect in Open Brain
+
+Coding sessions are expected to capture three classes of events explicitly:
+- **Project started** — new repo or project kicked off
+- **Major milestone** — significant feature complete, architecture decision locked, blocker resolved
+- **Shipped** — working code pushed, deployed, or handed off
+
+These are the anchor events the weekly review is built from. If a project appears in git history but has no Open Brain milestone, note it under Shipped This Week with "no milestone captured" so the gap is visible.
+
 ## Step 1: Determine target week
 
 Today is Monday. The review covers the Monday–Sunday that just ended (7 days ago through yesterday).
