@@ -37,15 +37,16 @@ If the `mcp__open_brain__*` tools are not present in the session, run `ListConne
 
 ## Step 3: Pull Claude Code git history
 
-Fetch commits from the past 8 days across these repos (MCP access may be limited to weekly-reviews only — pull what you can):
-- scotch333/Lanterns
-- scotch333/podcast-survey
-- scotch333/podcast-analysis
-- scotch333/3d-print-queue
-- scotch333/costco-rebate
-- scotch333/weekly-reviews
+Do not use a hardcoded repo list. Discover repos dynamically each run:
 
-If a repo is denied, search Outlook for `[scotch333/<repo>]` GitHub notification emails from the target week — CI runs, PR activity, and merges all land there and are enough to reconstruct what shipped.
+1. `mcp__github__search_repositories` with query `user:scotch333` (paginate until exhausted).
+2. Include every repo where `archived` is `false`.
+3. Also include repos where `archived` is `true` **and** `updated_at` falls inside the target week — archiving bumps `updated_at`, so this catches projects wrapped up this week. Note them as "archived this week" in the review.
+4. Skip forks unless they have commits by scotch333 in the window.
+
+For each included repo, `mcp__github__list_commits` with `since` = target Monday and `until` = review day. Skip repos with zero commits in the window.
+
+If the session's GitHub access is scoped to `weekly-reviews` only (calls to other repos return "Access denied"), that is an environment configuration problem — note it in the data-gap banner. Then search Outlook for `[scotch333/` GitHub notification emails from the target week; CI runs, PR activity, and merges all land there and are enough to reconstruct what shipped.
 
 ## Step 4: Generate the consolidated review
 
