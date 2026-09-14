@@ -25,14 +25,27 @@ Today is Monday. The review covers the Monday–Sunday that just ended (7 days a
 
 Use `mcp__open_brain__list_thoughts` with `days: 10` and `limit: 50` to catch the full window. Supplement with targeted searches if needed. Group what you find by project/topic.
 
+### Fallback when Open Brain is unavailable
+
+If the `mcp__open_brain__*` tools are not present in the session, run `ListConnectors` with keyword `open brain` to confirm the state (typically `needs_reconnect` or `enabledInChat: false`). Then:
+
+1. **Do not produce an empty review.** Use Outlook (`mcp__ms365__*`) as the supplemental source: search the calendar, Sent Items, and Inbox for the target week, plus targeted queries for active project names (Lanterns, Slather-Up, Turo, etc.).
+2. Add a `> **⚠ Data gap:**` banner directly under the *Sources* line naming which source is missing, why, and how many consecutive weeks it has been missing.
+3. Tag each project section with `*(sourced from email/calendar; no Open Brain milestone captured)*`.
+4. Add "Open Brain connector — needs reconnect" to Open Threads Carried Forward so it stays visible until fixed.
+5. Carry forward the prior review's open threads verbatim with "status unknown" rather than dropping them.
+
 ## Step 3: Pull Claude Code git history
 
 Fetch commits from the past 8 days across these repos (MCP access may be limited to weekly-reviews only — pull what you can):
+- scotch333/Lanterns
 - scotch333/podcast-survey
 - scotch333/podcast-analysis
 - scotch333/3d-print-queue
 - scotch333/costco-rebate
 - scotch333/weekly-reviews
+
+If a repo is denied, search Outlook for `[scotch333/<repo>]` GitHub notification emails from the target week — CI runs, PR activity, and merges all land there and are enough to reconstruct what shipped.
 
 ## Step 4: Generate the consolidated review
 
