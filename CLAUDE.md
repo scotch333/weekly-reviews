@@ -23,16 +23,35 @@ Today is Monday. The review covers the Monday–Sunday that just ended (7 days a
 
 ## Step 2: Pull Open Brain thoughts
 
-Use `mcp__open_brain__list_thoughts` with `days: 10` and `limit: 50` to catch the full window. Supplement with targeted searches if needed. Group what you find by project/topic.
+1. `mcp__open_brain__list_projects` — pull the project registry first. This is the canonical list of project names; use it to group thoughts and to name `###` sections consistently week over week.
+2. `mcp__open_brain__list_thoughts` with `days: 10` and `limit: 50` to catch the full window.
+3. `mcp__open_brain__search_thoughts` (semantic) for each active project name from step 1, plus "shipped", "milestone", "started" — catches thoughts the date filter misses.
+4. `mcp__open_brain__list_captures` — raw captures not yet promoted to thoughts. Include anything dated in the window; flag it as "(uncommitted capture)".
+
+Group what you find by project/topic. Do not write to Open Brain from this task (no `capture_thought`, `upsert_project`, or shelf mutations); the review is read-only against it.
+
+### Fallback when Open Brain is unavailable
+
+If the `mcp__open_brain__*` tools are not present in the session, run `ListConnectors` with keyword `open brain` to confirm the state (typically `needs_reconnect` or `enabledInChat: false`). Then:
+
+1. **Do not produce an empty review.** Use Outlook (`mcp__ms365__*`) as the supplemental source: search the calendar, Sent Items, and Inbox for the target week, plus targeted queries for active project names (Lanterns, Slather-Up, Turo, etc.).
+2. Add a `> **⚠ Data gap:**` banner directly under the *Sources* line naming which source is missing, why, and how many consecutive weeks it has been missing.
+3. Tag each project section with `*(sourced from email/calendar; no Open Brain milestone captured)*`.
+4. Add "Open Brain connector — needs reconnect" to Open Threads Carried Forward so it stays visible until fixed.
+5. Carry forward the prior review's open threads verbatim with "status unknown" rather than dropping them.
 
 ## Step 3: Pull Claude Code git history
 
-Fetch commits from the past 8 days across these repos (MCP access may be limited to weekly-reviews only — pull what you can):
-- scotch333/podcast-survey
-- scotch333/podcast-analysis
-- scotch333/3d-print-queue
-- scotch333/costco-rebate
-- scotch333/weekly-reviews
+Do not use a hardcoded repo list. Discover repos dynamically each run:
+
+1. `mcp__github__search_repositories` with query `user:scotch333` (paginate until exhausted).
+2. Include every repo where `archived` is `false`.
+3. Also include repos where `archived` is `true` **and** `updated_at` falls inside the target week — archiving bumps `updated_at`, so this catches projects wrapped up this week. Note them as "archived this week" in the review.
+4. Skip forks unless they have commits by scotch333 in the window.
+
+For each included repo, `mcp__github__list_commits` with `since` = target Monday and `until` = review day. Skip repos with zero commits in the window.
+
+If the session's GitHub access is scoped to `weekly-reviews` only (calls to other repos return "Access denied"), that is an environment configuration problem — note it in the data-gap banner. Then search Outlook for `[scotch333/` GitHub notification emails from the target week; CI runs, PR activity, and merges all land there and are enough to reconstruct what shipped.
 
 ## Step 4: Generate the consolidated review
 
