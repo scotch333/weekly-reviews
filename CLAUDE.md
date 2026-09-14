@@ -23,7 +23,12 @@ Today is Monday. The review covers the Monday–Sunday that just ended (7 days a
 
 ## Step 2: Pull Open Brain thoughts
 
-Use `mcp__open_brain__list_thoughts` with `days: 10` and `limit: 50` to catch the full window. Supplement with targeted searches if needed. Group what you find by project/topic.
+1. `mcp__open_brain__list_projects` — pull the project registry first. This is the canonical list of project names; use it to group thoughts and to name `###` sections consistently week over week.
+2. `mcp__open_brain__list_thoughts` with `days: 10` and `limit: 50` to catch the full window.
+3. `mcp__open_brain__search_thoughts` (semantic) for each active project name from step 1, plus "shipped", "milestone", "started" — catches thoughts the date filter misses.
+4. `mcp__open_brain__list_captures` — raw captures not yet promoted to thoughts. Include anything dated in the window; flag it as "(uncommitted capture)".
+
+Group what you find by project/topic. Do not write to Open Brain from this task (no `capture_thought`, `upsert_project`, or shelf mutations); the review is read-only against it.
 
 ### Fallback when Open Brain is unavailable
 
